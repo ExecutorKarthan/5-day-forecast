@@ -1,0 +1,28 @@
+
+/*Custom adjust the Bootstrap styling via overriding*/
+:root{
+    --bs-gradient: linear-gradient(to right, blue, #00008b)
+}
+
+.bg-gradient{
+    background-image: var(--bs-gradient);
+}
+
+h1{
+    flex-wrap: wrap;
+}
+
+.container{
+    margin: 0%;
+    flex-wrap: wrap;
+}
+
+.row{
+    flex-wrap: wrap;
+}
+
+.col{
+    padding: 3%;
+    margin: 3%;
+    flex-wrap: wrap;
+}
