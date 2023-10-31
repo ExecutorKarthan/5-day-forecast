@@ -17,6 +17,16 @@ h1{
     flex-wrap: wrap;
 }
 
+.search-container{
+    display: block;
+    width: fit-content;
+}
+
+#searchEntry, #submit{
+    display: block;
+    width: 100%;
+}
+
 .row{
     flex-wrap: wrap;
 }
