@@ -1,49 +1,52 @@
 function mainFunction(){
-    var city = getCity();
-    var weatherData = getWeatherData(city);
+  var cityName = getCity();
+  var weatherData = getWeatherData(cityName);
 }
 
 function getCity(){
     var enteredVal = document.querySelector("#searchEntry").value
-    console.log(enteredVal)
     if(enteredVal != undefined){
         var geoURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + enteredVal + "&limit=5&appid=" + apiKey
-        var end = "End"
+        fetch(geoURL).then(function (response) {
+          return response.json();
+      }).then(function(data, cityName){
+        var coord = String(data[0].lat) + "," + String(data[0].lon) + "," + data[0].country + "," + data[0].state
+        localStorage.setItem(data[0].name, coord)
+      })
     }
+    return enteredVal
 }
 
 function getWeatherData(city) {
-  var weatherUrl = 'https://api.github.com/orgs/nodejs/repos';
-  
+  var cityData = localStorage.getItem(city).split(",")
+  var lat = cityData[0]
+  var lon = cityData[1]
 
-  api = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}"
-
-  fetch(requestUrl)
+  var currentWeatherUrl = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey;
+  fetch(currentWeatherUrl)
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
       console.log(data)
-      //Loop over the data to generate a table, each table row will have a link to the repo url
-      for (var i = 0; i < data.length; i++) {
-        // Creating elements, tablerow, tabledata, and anchor
-        var createTableRow = document.createElement('tr');
-        var tableData = document.createElement('td');
-        var link = document.createElement('a');
-
-        // Setting the text of link and the href of the link
-        link.textContent = data[i].html_url;
-        link.href = data[i].html_url;
-
-        // Appending the link to the tabledata and then appending the tabledata to the tablerow
-        // The tablerow then gets appended to the tablebody
-        tableData.appendChild(link);
-        createTableRow.appendChild(tableData);
-        tableBody.appendChild(createTableRow);
-      }
+      var now = new Date
+      var date = String(now.getMonth()+1) + "/" + String(now.getDate()) + "/" + String(now.getFullYear())
+      var tempInF = (data.main.temp-273.15)*(9/5)+32
+      var currentData = data.name + "," + date + "," + String(Math.round(tempInF)) + "," +  String(Math.round(data.wind.speed))  + "mph," + String(Math.round(data.main.humidity))+"%";
+      localStorage.setItem("currentDay", currentData)
+      console.log(localStorage.getItem("currentDay"))
     });
-}
 
+    var forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey;
+    fetch(forecastUrl)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        console.log(data)
+       
+      });
+}
 var searchButton = document.getElementById("submit")
 var apiKey = "d94e40dc3110b3f5435c24fcec8d0aca";
 searchButton.addEventListener("click", mainFunction)
