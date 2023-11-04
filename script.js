@@ -1,16 +1,19 @@
 var searchButton = document.getElementById("submit")
 var apiKey = "d94e40dc3110b3f5435c24fcec8d0aca";
-var weatherData = ""
+var ul = document.querySelector("#previousResults")
 searchButton.addEventListener("click", mainFunction)
+ul.addEventListener("click", function(event){
+  getCity(event.target.innerHTML)
+})
 
 function mainFunction(){
-  getCity();
+  var enteredVal = document.querySelector("#searchEntry").value
+  getCity(enteredVal);
 }
 
-function getCity(){
-    var enteredVal = document.querySelector("#searchEntry").value
-    if(enteredVal != undefined){
-        var geoURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + enteredVal + "&limit=5&appid=" + apiKey
+function getCity(cityName){
+    if(cityName != undefined){
+        var geoURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5&appid=" + apiKey
         fetch(geoURL).then(function (response) {
           return response.json();
       }).then(function(data){
@@ -31,7 +34,6 @@ function getWeatherData(city, coord) {
       return response.json();
     })
     .then(function (data) {
-      console.log(data)
       var now = new Date
       var date = String(now.getMonth()+1) + "/" + String(now.getDate()) + "/" + String(now.getFullYear())
       
@@ -63,7 +65,6 @@ function getWeatherData(city, coord) {
         return response.json();
       })
       .then(function (data) {
-        console.log(data)
         var now = new Date;
         var count = 1;
         for(var i = 0; i< 40; i = i+8){
@@ -71,6 +72,7 @@ function getWeatherData(city, coord) {
           count++;
         }
       });
+  saveResults(city);
 }
 
 function setForecast(now, count, i, data){
@@ -92,4 +94,21 @@ function setForecast(now, count, i, data){
   var humidEle = document.querySelector("#humid"+String(count))
   var humid = "Humidity: " + String(Math.round(data.list[i].main.humidity))+"%";
   humidEle.innerHTML = humid  
+}
+
+function saveResults(cityName){
+  var previousEntries = document.querySelector("#previousResults").children
+  var newEntryNeeded = true;
+  for(var i=0; i< previousEntries.length; i++){
+    if(previousEntries[i].innerHTML == cityName){
+      newEntryNeeded = false;
+      break
+    }
+  }
+  if (newEntryNeeded){
+    var newPrevious = document.createElement("li");
+    newPrevious.textContent = cityName;
+    newPrevious.style.listStyleType = "none";
+    document.querySelector("#previousResults").appendChild(newPrevious);
+  }
 }
