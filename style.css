@@ -1,15 +1,17 @@
-
 /*Custom adjust the Bootstrap styling via overriding*/
 :root{
-    --bs-gradient: linear-gradient(to right, blue, #00008b)
+    --bs-gradient: linear-gradient(to right, blue, #00008b);
 }
 
+/*Create a color gradient for the banner*/
 .bg-gradient{
     background-image: var(--bs-gradient);
 }
 
+/*Adjust the styling on each container*/
 h1{
     flex-wrap: wrap;
+    font-weight: 500;
 }
 
 .container{
@@ -27,12 +29,29 @@ h1{
     width: 100%;
 }
 
+/*Style submission button*/
+#submit{
+    background-color: navy;
+    color: white
+}
+
+#previousResults{
+    padding:0px;
+}
+
+/*Adjust rows and columns to align correctly*/
 .row{
     flex-wrap: wrap;
+    font-size:medium;
+    font-weight: 500;
 }
 
 .col{
-    padding: 3%;
-    margin: 3%;
+    margin: 1%;
     flex-wrap: wrap;
+}
+
+/*Adjust forecast box color*/
+#forecastBox{
+    color: white;
 }

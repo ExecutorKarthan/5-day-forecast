@@ -28,7 +28,7 @@
                     <input type="text" id="searchEntry">
                     <br>
                     <button id="submit">Search</button>
-                    <ul id="previousResults"></ul>
+                    <ul id="previousResults" class=""></ul>
                 </div>
                 <!--Create two rows in the left column to hold the display information -->
                 <div class="col-9">
@@ -43,37 +43,38 @@
                         </div>
                     </div>
                     <!--Create a row to show current the 5 day forecast-->
-                    <div class="row">
+                    <div id="forecastBox"class="row">
                         <h2>5 Day Forecast</h2>
-                        <div id="day1" class="col border border-dark">
+                        <!--Create a container for each day of the forecast-->
+                        <div id="day1" class="col border border-dark bg-info rounded">
                             <h2 id="date1"></h2>
                             <img id="icon1"> 
                             <p id="temp1"></p>
                             <p id="wind1"></p>
                             <p id="humid1"></p>
                         </div>
-                        <div id="day2" class="col border border-dark">
+                        <div id="day2" class="col border border-dark bg-info rounded">
                             <h2 id="date2"></h2>
                             <img id="icon2"> 
                             <p id="temp2"></p>
                             <p id="wind2"></p>
                             <p id="humid2"></p>
                         </div>
-                        <div id="day3" class="col border border-dark">
+                        <div id="day3" class="col border border-dark bg-info rounded">
                             <h2 id="date3"></h2>
                             <img id="icon3"> 
                             <p id="temp3"></p>
                             <p id="wind3"></p>
                             <p id="humid3"></p>
                         </div>
-                        <div id="day4" class="col border border-dark">
+                        <div id="day4" class="col border border-dark bg-info rounded">
                             <h2 id="date4"></h2>
                             <img id="icon4"> 
                             <p id="temp4"></p>
                             <p id="wind4"></p>
                             <p id="humid4"></p>
                         </div>
-                        <div id="day5" class="col border border-dark">
+                        <div id="day5" class="col border border-dark bg-info rounded">
                             <h2 id="date5"></h2>
                             <img id="icon5"> 
                             <p id="temp5"></p>
