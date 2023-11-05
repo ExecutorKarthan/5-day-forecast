@@ -21,7 +21,7 @@ function mainFunction(){
 function getCity(cityName){
     if(cityName != undefined){
       //Generate a URL using my API key and add in the correct location
-      var geoURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5&appid=" + apiKey
+      var geoURL = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5&appid=" + apiKey
       //Fetch the location data, then pass it to the get weather function
       fetch(geoURL).then(function (response) {
           return response.json();
