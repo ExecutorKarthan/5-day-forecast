@@ -2,17 +2,69 @@
 var searchButton = document.getElementById("submit")
 var apiKey = "d94e40dc3110b3f5435c24fcec8d0aca";
 var ul = document.querySelector("#previousResults")
-
+var dataStorage = [];
 //Add an event listener to search for weather when the search button is clicked
 searchButton.addEventListener("click", mainFunction)
 
 //Create an event listener for when a previously selected city is clicked on
 ul.addEventListener("click", function(event){
-  getCity(event.target.innerHTML)
+  //Get the data from the city that was selected
+  var cityData = localStorage.getItem(event.target.innerHTML)
+  var processedData = cityData.split(",")
+
+  //Set city name
+  var cityTitle = document.querySelector("#cityHeader")
+  cityTitle.innerHTML = processedData[1];
+
+  //Set weather icon
+  var currentIcon = document.querySelector("#currentIcon")
+  currentIcon.src = processedData[2]
+  
+  //Set temperature
+  var tempEle = document.querySelector("#currentTemp")
+  tempEle.innerHTML = processedData[3];
+  
+  //Set wind data
+  var windEle = document.querySelector("#currentWind")
+  windEle.innerHTML = processedData[4];
+  
+  //Set humidity data
+  var humidEle = document.querySelector("#currentHumid")
+  humidEle.innerHTML = processedData[5];
+
+  //Set Forecast data
+  var count = 1;
+  for(var i = 6; i < 31; i = i+5){
+    //Set date
+    var dateHeader = document.querySelector("#date"+String(count))
+    dateHeader.textContent = processedData[i];
+    
+    //Set weather icon
+    var weatherIconURL = processedData[i+1];
+    var icon = document.querySelector("#icon"+String(count))
+    icon.src = weatherIconURL;
+
+    //Set the temperature
+    var tempEle = document.querySelector("#temp"+String(count))
+    tempEle.innerHTML = processedData[i+2];
+    
+    //Set the wind data 
+    var windEle = document.querySelector("#wind"+String(count))
+    windEle.innerHTML = processedData[i+3];
+    
+    //Set the humidity data
+    var humidEle = document.querySelector("#humid"+String(count))
+    humidEle.innerHTML = processedData[i+4];
+    count++
+  }
 })
 
 //Call a primary function that will start the function cascade
 function mainFunction(){
+  //Cleat the dataStorage variable so it is ready for the next city
+  while (dataStorage.length > 0){
+    var trash = dataStorage.pop()
+  } 
   var enteredVal = document.querySelector("#searchEntry").value
   getCity(enteredVal);
 }
@@ -27,7 +79,9 @@ function getCity(cityName){
           return response.json();
       }).then(function(data){
         var coord = String(data[0].lat) + "," + String(data[0].lon);
-        getWeatherData(data[0].name, coord);
+        //Save the data to storage
+        dataStorage.push(data[0].name)
+        getWeatherData(data[0].name, coord, dataStorage);
       })
     }
 }
@@ -61,18 +115,21 @@ function getWeatherData(city, coord) {
       
       //Get temperature
       var tempEle = document.querySelector("#currentTemp")
-      var tempInF = Math.round(((data.main.temp-273.15)*(9/5)+32)*100)/100
-      tempEle.innerHTML = "Temp: " + tempInF + "°F"
+      var tempInF = "Temp: " + Math.round(((data.main.temp-273.15)*(9/5)+32)*100)/100 + " °F"
+      tempEle.innerHTML = tempInF
       
       //Get wind data
       var windEle = document.querySelector("#currentWind")
-      var wind = "Wind: " + String(Math.round(data.wind.speed))+ "mph"
+      var wind = "Wind: " + String(Math.round(data.wind.speed))+ " mph"
       windEle.innerHTML = wind
       
       //Get humidity data
       var humidEle = document.querySelector("#currentHumid")
       var humid = "Humidity: " + String(Math.round(data.main.humidity))+"%";
       humidEle.innerHTML = humid
+      
+      //Save the data to storage
+      dataStorage.push([cityName + "(" + date + ")", weatherIconURL, tempInF, wind, humid])
     });
 
     //Generate a URL using my API key and add in the correct latitude and longitude for the forecast data
@@ -90,6 +147,8 @@ function getWeatherData(city, coord) {
           setForecast(now, count, i, data);
           count++;
         }
+        //Save the data to local storage
+        localStorage.setItem(dataStorage[0], dataStorage)
       });
   //Save the city searched
   saveResults(city);
@@ -109,8 +168,8 @@ function setForecast(now, count, i, data){
 
   //Collect and update the temperature
   var tempEle = document.querySelector("#temp"+String(count))
-  var tempInF = Math.round(((data.list[i].main.temp-273.15)*(9/5)+32)*100)/100
-  tempEle.innerHTML = "Temp: " + tempInF + "°F"
+  var tempInF = "Temp: " + Math.round(((data.list[i].main.temp-273.15)*(9/5)+32)*100)/100 + "°F"
+  tempEle.innerHTML = tempInF 
   
   //Collect and update the wind data 
   var windEle = document.querySelector("#wind"+String(count))
@@ -121,6 +180,9 @@ function setForecast(now, count, i, data){
   var humidEle = document.querySelector("#humid"+String(count))
   var humid = "Humidity: " + String(Math.round(data.list[i].main.humidity))+"%";
   humidEle.innerHTML = humid  
+
+  //Save the data to storage
+  dataStorage.push([date, weatherIconURL, tempInF, wind, humid])
 }
 
 //Create a function to add a list item with the name of the previously search citys
